@@ -66,7 +66,7 @@ for testEntry in testConfig:
     testPoints = testEntry["points"]
     hwMaxPoints += testPoints
 
-    print "\n\n\n------- Test", testName, "START\t----------\n" 
+    print ("\n\n\n------- Test", testName, "START\t----------\n" )
 
     try:
         child = sp.Popen( ['./gpu_hashtable', testEntries, testChunks, testSpeed], stdout=sp.PIPE )
@@ -75,20 +75,20 @@ for testEntry in testConfig:
         print( output )
         rc = child.poll()
         if rc == 1:
-            print "------- Test", testName, "END\t---------- \t [ FAILED ]"
+            print ("------- Test", testName, "END\t---------- \t [ FAILED ]")
             continue
 
     except Exception:
 
-        print "------- Test", testName, "END\t---------- \t [ FAILED ]"
+        print ("------- Test", testName, "END\t---------- \t [ FAILED ]")
         traceback.print_exc()
-        print "Error with",  str(['./src/gpu_hashtable', testEntries, testChunks, testSpeed])
+        print ("Error with",  str(['./src/gpu_hashtable', testEntries, testChunks, testSpeed]))
         continue
 
-    print "------- Test ", testName, "END\t---------- \t [ OK RESULT: ", testPoints, " pts ]"
+    print ("------- Test ", testName, "END\t---------- \t [ OK RESULT: ", testPoints, " pts ]")
     hwPoints = hwPoints + testPoints
 
-    print "\nTotal so far: ", hwPoints, "/",  80
+    print ("\nTotal so far: ", hwPoints, "/",  80)
 
-print "\nTotal:", hwPoints, "/",  80
+print ("\nTotal:", hwPoints, "/",  80)
 
