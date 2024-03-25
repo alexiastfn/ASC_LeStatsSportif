@@ -3,7 +3,7 @@
 <note important>    
   * **Deadline:** 7 aprilie 2024, ora 23:55. Primiți un bonus de 10% pentru trimiterea temei cu 2 zile înaintea acestui termen, adică înainte de 5 aprilie 2024, ora 23:55.
     * **Deadline hard:** 14 aprilie 2024, ora 23:55. Veți primi o depunctare de 10% din punctajul maxim al temei pentru fiecare zi de întârziere, până la maxim 7 zile, adică până pe 14 aprilie 2024, ora 23:55.
-    * **Responsabili:** [[ andreicatalin.ouatu@gmail.com | Andrei Ouatu ]], [[daniel.dosaru@upb.ro|Daniel Dosaru]], [[eduard.staniloiu@cs.pub.ro | Eduard Stăniloiu]], [[giorgiana.vlasceanu@gmail.com | Giorgiana Vlăsceanu]] 
+    * **Responsabili:** [[ andreicatalin.ouatu@gmail.com | Andrei Ouatu]], [[andreitrifu.acs@gmail.com|Andrei Trifu]], [[ adumitrescu2708@stud.acs.upb.ro| Alexandra Dumitrescu]],[[eduard.staniloiu@cs.pub.ro | Eduard Stăniloiu]], [[ radunichita99@gmail.com | Radu Nichita]], [[ioana.profeanu@gmail.com| Ioana Profeanu]], [[giorgiana.vlasceanu@gmail.com | Giorgiana Vlăsceanu]] 
     * **Autori:** [[eduard.staniloiu@cs.pub.ro | Eduard Stăniloiu]], [[giorgiana.vlasceanu@gmail.com | Giorgiana Vlăsceanu]]
 </note>
 
