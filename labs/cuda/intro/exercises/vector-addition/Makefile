@@ -1,3 +1,3 @@
-EXECS = vector-addition
+EXECS = $(notdir $(CURDIR))
 
 include ../../../Makefile

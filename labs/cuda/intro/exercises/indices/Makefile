@@ -1,3 +1,3 @@
-EXECS = indices
+EXECS = $(notdir $(CURDIR))
 
 include ../../../Makefile
