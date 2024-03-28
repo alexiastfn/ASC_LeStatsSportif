@@ -1,0 +1,3 @@
+EXECS = compute
+
+include ../../../Makefile

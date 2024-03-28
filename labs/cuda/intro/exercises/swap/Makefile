@@ -1,0 +1,3 @@
+EXECS = swap
+
+include ../../../Makefile

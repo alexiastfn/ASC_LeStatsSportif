@@ -1,0 +1,3 @@
+EXECS = hello
+
+include ../../../Makefile

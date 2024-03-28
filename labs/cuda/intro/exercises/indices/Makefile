@@ -1,0 +1,3 @@
+EXECS = indices
+
+include ../../../Makefile
