@@ -90,4 +90,9 @@ Submitted batch job 337860
 [GPU] The value is 11
 ```
 
+## Aplicații
+
+0. Rulați exemplele din <tutorials/> conform pașilor de mai sus.
+1. Rezolvați problemele din <exercices/> urmărind `TODO`-urile.
+
 [fără parolă]: https://askubuntu.com/questions/46930/how-can-i-set-up-password-less-ssh-login
