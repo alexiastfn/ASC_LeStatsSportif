@@ -91,7 +91,7 @@ Urmăriți instrucțiunile pe o mașină UNIX-like.
   Acestea sunt (în ordine ascendentă a dificultății):
     1. [vector-addition](exercises/vector-addition/)
     2. [indices](exercises/indices/)
-    3. [swap](exercices/swap/)
+    3. [swap](exercises/swap/)
     
 
 [fără parolă]: https://askubuntu.com/questions/46930/how-can-i-set-up-password-less-ssh-login
