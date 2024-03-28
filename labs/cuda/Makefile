@@ -7,7 +7,8 @@ LIBS     ?=
 EXECS    ?=
 
 # Cluster setup
-PARTITION  ?= ucsx
+PARTITION  ?= xl
+# PARTITION  ?= ucsx
 RUN_TIME   ?= 00:01:00
 BUILD_TIME ?= 00:01:00
 IMG        ?= docker://gitlab.cs.pub.ro:5050/asc/asc-public/cuda-labs:1.9.1
@@ -24,13 +25,13 @@ compile:
 		--wrap="apptainer exec --nv $(IMG) make LOCAL=y"
 
 run:
-	@for exec in $(EXECS);                                \
-	do                                                    \
-		test -f $${exec} &&                               \
-		sbatch                                            \
-			--partition $(PARTITION)                     \
-			--gres gpu:1                                  \
-			--time $(RUN_TIME)                           \
+	@for exec in $(EXECS);                                  \
+	do                                                      \
+		test -f $${exec} &&                                 \
+		sbatch                                              \
+			--partition $(PARTITION)                        \
+			--gres gpu:1                                    \
+			--time $(RUN_TIME)                              \
 			--wrap="apptainer exec --nv $(IMG) ./$${exec}"; \
 	done
 

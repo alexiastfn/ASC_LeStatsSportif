@@ -43,6 +43,41 @@
             339347        xl     wrap cucu.bau PD       0:00      1 (Priority)
     ```
 
+## Utilizând procesorul grafic personal
+
+Urmăriți instrucțiunile pe o mașină UNIX-like.
+
+1. Clonați acest repository.
+    Observație: mențineți clona la curent cu schimbările recente (e.g. `git pull`)
+    ```bash
+    $ git clone https://gitlab.cs.pub.ro/asc/asc-public.git
+    ```
+2. Navigați către aplicația cu care lucrați.
+    ```bash
+    $ cd asc-public/labs/cuda/intro/tutorials/hello
+    ```
+3. Compilați sursele.
+    ```bash
+    $ make LOCAL=y
+    nvcc   hello.cu -o hello
+    $ ./hello
+    [HOST] Hello from the host!
+    [HOST] You have 1 CUDA-capable GPU(s)
+    [GPU] Hello from the GPU!
+    [GPU] Hello from the GPU!
+    [GPU] The value is 11
+    [GPU] The value is 11
+    ```
+    **Observație**! Dacă întâmpinați următoarea problemă:
+
+    > ERROR: No supported gcc/g++ host compiler found, but clang-14 is available.
+    > Use 'nvcc -ccbin clang-14' to use that instead.
+
+    Rulați așă comanda de `make`:
+    ```bash
+    make NVCC="nvcc -ccbin clang-14" LOCAL=y
+    ```
+
 ## Aplicații
 
 0. Rulați exemplele din [tutorials](tutorials/) conform pașilor de mai sus.
