@@ -17,7 +17,7 @@
     ```bash
     [prenume.numeID@fep8 hello]$ cd asc-public/labs/cuda/intro/tutorials/hello
     ```
-4. Compilați sursele.
+4. Compilați și rulați.
     ```bash
     [prenume.numeID@fep8 hello]$ make
     Submitted batch job 339551
@@ -41,6 +41,12 @@
     [prenume.numeID@fep8 hello]$ squeue -j 339347
              JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
             339347        xl     wrap cucu.bau PD       0:00      1 (Priority)
+    ```
+5. Ajustați parametrii de rulare din [Makefile](../Makefile) în favoarea voastră.
+    ```bash
+    make BUILD_TIME=00:05:00
+    # sau
+    make RUN_TIME=00:05:00
     ```
 
 ## Utilizând procesorul grafic personal

@@ -9,8 +9,8 @@ EXECS    ?=
 # Cluster setup
 PARTITION  ?= xl
 # PARTITION  ?= ucsx
-RUN_TIME   ?= 00:01:00
-BUILD_TIME ?= 00:01:00
+RUN_TIME   ?= 00:05:00
+BUILD_TIME ?= 00:05:00
 IMG        ?= docker://gitlab.cs.pub.ro:5050/asc/asc-public/cuda-labs:1.9.1
 # IMG        ?= docker://gitlab.cs.pub.ro:5050/asc/asc-public/cuda-labs:1.11.4
 
