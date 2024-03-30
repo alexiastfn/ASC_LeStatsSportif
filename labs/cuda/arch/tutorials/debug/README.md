@@ -13,13 +13,13 @@ execuție mai multe thread-uri decât elemente de memorie alocate, în primul ca
 #define MAGNITUDE   1
 ```
 
-Am lansat $8 \cross 16 = 128$ thread-uri ca să acceseze $100$ elemente.
+Am lansat $8 \times 16 = 128$ thread-uri ca să acceseze $100$ elemente.
 
 Dacă rulăm programul vom observa că nu întoarce nici o eroare. Deoarece sunt
 puține accesuri invalide.
 
 CUDA însă oferă aplicații care să analizeze și să detecteze accesuri invalide
-cu o precizie ridicată. Dacă rulăm de exemplu `compute-sanitizer` vom vedea
+cu o precizie ridicată. Dacă rulăm, de exemplu, `compute-sanitizer` vom vedea
 instant că avem accesuri invalide la memorie. 
 
 ```bash

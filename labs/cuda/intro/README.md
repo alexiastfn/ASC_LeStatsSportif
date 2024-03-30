@@ -13,11 +13,15 @@
     ```bash
     [prenume.numeID@fep8 ~]$ git clone https://gitlab.cs.pub.ro/asc/asc-public.git
     ```
+1. Navigați către aplicația cu care lucrați.
+    ```bash
+    [prenume.numeID@fep8 hello]$ cd asc-public/labs/cuda/intro/tutorials/hello
+    ```
 1. Asigurați-vă că aveți CUDA configurat pe GPU-ul pe care lucrați.
     ```bash
-    [prenume.numeID@fep8 ~]$ make run EXECS=Makefile RUN_CMD="nvidia-smi"
+    [prenume.numeID@fep8 hello]$ make run EXECS=Makefile RUN_CMD="nvidia-smi"
     Submitted batch job 341504
-    [prenume.numeID@fep8 ~]$ cat slurm-341504.out
+    [prenume.numeID@fep8 hello]$ cat slurm-341504.out
     Sat Mar 30 10:44:17 2024
     +-----------------------------------------------------------------------------------------+
     | NVIDIA-SMI 550.54.15              Driver Version: 550.54.15      CUDA Version: 12.4     |
@@ -38,10 +42,6 @@
     |=========================================================================================|
     |  No running processes found                                                             |
     +-----------------------------------------------------------------------------------------+
-    ```
-1. Navigați către aplicația cu care lucrați.
-    ```bash
-    [prenume.numeID@fep8 hello]$ cd asc-public/labs/cuda/intro/tutorials/hello
     ```
 1. Compilați și rulați.
     ```bash
