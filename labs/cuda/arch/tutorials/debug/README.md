@@ -75,5 +75,3 @@ Thread 1 "debug" received signal CUDA_EXCEPTION_14, Warp Illegal Address.
 [Switching focus to CUDA kernel 0, grid 1, block (418462,0,0), thread (128,0,0), device 0, sm 5, warp 3, lane 0]
 0x00000100002f0a08 in kernel_compute(int*)<<<(8388608,1,1),(256,1,1)>>> ()
 ```
-Activați flag-urile de debug din [Makefile](Makefile) dacă faceți o depanare
-mai aprofundată.
