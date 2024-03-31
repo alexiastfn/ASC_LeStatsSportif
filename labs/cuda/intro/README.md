@@ -19,7 +19,7 @@
     ```
 1. Asigurați-vă că aveți CUDA configurat pe GPU-ul pe care lucrați.
     ```bash
-    [prenume.numeID@fep8 hello]$ make run EXECS=Makefile RUN_CMD="nvidia-smi"
+    [prenume.numeID@fep8 hello]$ make run RUN_CMD="nvidia-smi"
     Submitted batch job 341504
     [prenume.numeID@fep8 hello]$ cat slurm-341504.out
     Sat Mar 30 10:44:17 2024
@@ -146,9 +146,6 @@ flowchart TD
     end
     E -->|No| T((End))
     MakeRun --> E
-
-    classDef mono font-family:monospace;
-    class C,MKC,MKC1,MKC2,MKL,D,MKR,MKR1,MKR2,MKRL mono
 ```
 
 ## Utilizând procesorul grafic personal
