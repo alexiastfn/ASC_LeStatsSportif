@@ -8,16 +8,42 @@
   personale** [fără parolă].
     ```bash
     $ ssh prenume.numeID@fep8.grid.pub.ro
-2. Clonați acest repository.
+1. Clonați acest repository.
     Observație: mențineți clona la curent cu schimbările recente (e.g. `git pull`)
     ```bash
     [prenume.numeID@fep8 ~]$ git clone https://gitlab.cs.pub.ro/asc/asc-public.git
     ```
-3. Navigați către aplicația cu care lucrați.
+1. Navigați către aplicația cu care lucrați.
     ```bash
     [prenume.numeID@fep8 hello]$ cd asc-public/labs/cuda/intro/tutorials/hello
     ```
-4. Compilați și rulați.
+1. Asigurați-vă că aveți CUDA configurat pe GPU-ul pe care lucrați.
+    ```bash
+    [prenume.numeID@fep8 hello]$ make run EXECS=Makefile RUN_CMD="nvidia-smi"
+    Submitted batch job 341504
+    [prenume.numeID@fep8 hello]$ cat slurm-341504.out
+    Sat Mar 30 10:44:17 2024
+    +-----------------------------------------------------------------------------------------+
+    | NVIDIA-SMI 550.54.15              Driver Version: 550.54.15      CUDA Version: 12.4     |
+    |-----------------------------------------+------------------------+----------------------+
+    | GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+    | Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+    |                                         |                        |               MIG M. |
+    |=========================================+========================+======================|
+    |   0  Tesla P100-PCIE-16GB           On  |   00000000:0D:00.0 Off |                    0 |
+    | N/A   25C    P0             24W /  250W |       0MiB /  16384MiB |      0%      Default |
+    |                                         |                        |                  N/A |
+    +-----------------------------------------+------------------------+----------------------+
+
+    +-----------------------------------------------------------------------------------------+
+    | Processes:                                                                              |
+    |  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+    |        ID   ID                                                               Usage      |
+    |=========================================================================================|
+    |  No running processes found                                                             |
+    +-----------------------------------------------------------------------------------------+
+    ```
+1. Compilați și rulați.
     ```bash
     [prenume.numeID@fep8 hello]$ make
     Submitted batch job 339551
@@ -34,15 +60,23 @@
     [GPU] Hello from the GPU!
     [GPU] The value is 11
     [GPU] The value is 11
+    [prenume.numeID@fep8 hello]$ make clean
+    rm -f hello slurm-*.out slurm-*.err
     ```
-    *Notă*: În caz în care fișierul `slurm-ID.out` nu a fost creat, verificați
+    *Notă*. În caz în care fișierul `slurm-ID.out` nu a fost creat, verificați
     statusul job-ului vostru.
     ```bash
     [prenume.numeID@fep8 hello]$ squeue -j 339347
              JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
             339347        xl     wrap cucu.bau PD       0:00      1 (Priority)
     ```
-5. Ajustați parametrii de rulare din [Makefile](../Makefile) în favoarea voastră.
+    **Atenție**! Dacă comanda voastră necesită mai mult timp de rulare,
+    veți vedea outputuri parțiale în fișierul `slurm-ID.out`. Folosiți atunci
+    `watch`. (`man 1 watch`).
+    ```bash
+    [prenume.numeID@fep8 hello]$ watch cat slurm-339347.out
+    ```
+1. Ajustați parametrii de rulare din [Makefile](../Makefile) în favoarea voastră.
     ```bash
     make BUILD_TIME=00:05:00
     # sau
@@ -51,7 +85,12 @@
 
 ## Utilizând procesorul grafic personal
 
-Urmăriți instrucțiunile pe o mașină UNIX-like.
+Urmăriți instrucțiunile pe o mașină UNIX-like. Vedeți instrucțiunile de instalare
+pentru [Linux](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/). În
+cazul în care folosiți MacOS sau Windows vă rugăm să creați un merge request cu
+pașii pe care i-ați urmat.
+
+### Linux
 
 1. Clonați acest repository.
     Observație: mențineți clona la curent cu schimbările recente (e.g. `git pull`)
