@@ -11,10 +11,10 @@ static void HandleError(cudaError_t err, const char* file, int line) {
 }
 #define HANDLE_ERROR(err) (HandleError(err, __FILE__, __LINE__))
 
-#define MAGNITUDE   1
-// #define MAGNITUDE   (1024 * 1024)
+// #define MAGNITUDE   1
+#define MAGNITUDE   (1024 * 1024)
 #define NUM_BLOCKS  (8 * MAGNITUDE)
-#define NUM_THREADS 256
+#define NUM_THREADS 16
 #define NUM_ELEM    (100 * MAGNITUDE)
 
 __global__ void kernel_compute(int* data) {
