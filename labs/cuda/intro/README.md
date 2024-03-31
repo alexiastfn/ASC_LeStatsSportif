@@ -83,6 +83,74 @@
     make RUN_TIME=00:05:00
     ```
 
+Opțional, s-ar putea să vă ajute să montați subdirectorul `labs` din clona
+voastră a acestui repository pe mașina locală. Ajutați căile din instrucțiunile
+de mai jos la nevoie.
+```bash
+[prenume.numeID@fep8 labs]$ pwd
+/export/home/acs/stud/m/matei.barbu1905/asc-public/labs
+[prenume.numeID@fep8 labs]$ exit
+# local machine commands from now on
+$ mkdir fep-local-mnt-point
+$ sudo sshfs prenume.numeID@fep8.grid.pub.ro:/export/home/acs/stud/m/prenume.numeID/asc-public/labs fep-local-mnt-point -o follow_symlinks,allow_other
+```
+
+### În spatele cortinei
+
+Urmăriți diagrama de mai jos pentru a înțelege care este șirul de acțiuni
+executate în spatele exemplului de mai sus.
+```mermaid
+flowchart TD
+    S((Start))
+    T((End))
+    A[Connect to fep8.grid.pub.ro]
+    B[Clone]
+    C[make]
+    MKC[sbatch]
+    MKC1[module load]
+    MKC2[apptainer exec]
+    MKCL[make LOCAL=y]
+    D[make run]
+    E{Execs?}
+    MKR[sbatch]
+    MKR1[module load]
+    MKR2[apptainer exec]
+    MKRL[./exec]
+
+    S --> A
+    A --> B
+    B --> C
+
+    C --> MakeCompile
+    subgraph MakeCompile
+        MKC --> MKC1
+        MKC --> MKC2
+        MKC1 --> ClusterCompile
+        MKC2 --> ClusterCompile
+        subgraph ClusterCompile
+            MKCL
+        end
+    end
+    MakeCompile --> D
+
+    D --> E
+    E -->|Yes| MakeRun
+    subgraph MakeRun
+        MKR --> MKR1
+        MKR --> MKR2
+        MKR1 --> ClusterRun
+        MKR2 --> ClusterRun
+        subgraph ClusterRun
+            MKRL
+        end
+    end
+    E -->|No| T((End))
+    MakeRun --> E
+
+    classDef mono font-family:monospace;
+    class C,MKC,MKC1,MKC2,MKL,D,MKR,MKR1,MKR2,MKRL mono
+```
+
 ## Utilizând procesorul grafic personal
 
 Urmăriți instrucțiunile pe o mașină UNIX-like. Vedeți instrucțiunile de instalare
