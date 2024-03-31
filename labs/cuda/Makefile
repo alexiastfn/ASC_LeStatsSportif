@@ -1,21 +1,24 @@
 # Compiler collection setup
-NVCC     ?= nvcc
-CC_FLAGS ?=
-CPPFLAGS ?=
-LDFLAGS  ?=
-LIBS     ?=
-EXECS    ?=
+NVCC      ?= nvcc
+NVCCFLAGS ?=
+CPPFLAGS  ?=
+LDFLAGS   ?=
+LIBS      ?=
+EXECS     ?=
 
 # Cluster setup
 PARTITION  ?= xl
-# PARTITION  ?= ucsx
 RUN_TIME   ?= 00:05:00
 BUILD_TIME ?= 00:05:00
 IMG        ?= docker://gitlab.cs.pub.ro:5050/asc/asc-public/cuda-labs:1.11.4
-# LOAD_CMD   ?= apptainer exec --nv $(IMG)
 LOAD_CMD   ?= module load libraries/cuda-11.4;
 BUILD_CMD  ?= make LOCAL=y
 RUN_CMD    ?= ./$${exec}
+
+# Alternatives
+# PARTITION  ?= ucsx
+# IMG        ?= docker://gitlab.cs.pub.ro:5050/asc/asc-public/cuda-labs:1.9.1
+# LOAD_CMD   ?= apptainer exec --nv $(IMG)
 
 # Logged into your fep8.grid.pub.ro user, employ the following two
 ifndef LOCAL
