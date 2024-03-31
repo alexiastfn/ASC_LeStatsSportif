@@ -7,17 +7,17 @@ LIBS      ?=
 EXECS     ?=
 
 # Cluster setup
-PARTITION  ?= xl
+PARTITION  ?= ucsx
 RUN_TIME   ?= 00:05:00
 BUILD_TIME ?= 00:05:00
-IMG        ?= docker://gitlab.cs.pub.ro:5050/asc/asc-public/cuda-labs:1.11.4
+IMG        ?= docker://gitlab.cs.pub.ro:5050/asc/asc-public/cuda-labs:1.9.1
 LOAD_CMD   ?= module load libraries/cuda-11.4;
 BUILD_CMD  ?= make LOCAL=y
 RUN_CMD    ?= ./$${exec}
 
 # Alternatives
-# PARTITION  ?= ucsx
-# IMG        ?= docker://gitlab.cs.pub.ro:5050/asc/asc-public/cuda-labs:1.9.1
+# PARTITION  ?= xl
+# IMG        ?= docker://gitlab.cs.pub.ro:5050/asc/asc-public/cuda-labs:1.11.4
 # LOAD_CMD   ?= apptainer exec --nv $(IMG)
 
 # Logged into your fep8.grid.pub.ro user, employ the following two
