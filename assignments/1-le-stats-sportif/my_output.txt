@@ -88,9 +88,9 @@ app/logger.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 app/logger.py:8:0: C0115: Missing class docstring (missing-class-docstring)
 app/logger.py:10:40: C0103: Argument name "maxBytes" doesn't conform to snake_case naming style (invalid-name)
 app/logger.py:10:55: C0103: Argument name "backupCount" doesn't conform to snake_case naming style (invalid-name)
-app/logger.py:24:4: C0116: Missing function or method docstring (missing-function-docstring)
-app/logger.py:24:4: C0103: Method name "getConfiguredLogger" doesn't conform to snake_case naming style (invalid-name)
-app/logger.py:27:4: C0116: Missing function or method docstring (missing-function-docstring)
+app/logger.py:23:4: C0116: Missing function or method docstring (missing-function-docstring)
+app/logger.py:23:4: C0103: Method name "getConfiguredLogger" doesn't conform to snake_case naming style (invalid-name)
+app/logger.py:26:4: C0116: Missing function or method docstring (missing-function-docstring)
 app/logger.py:2:0: W0611: Unused import os (unused-import)
 app/logger.py:3:0: W0611: Unused import shutil (unused-import)
 ************* Module app.data_ingestor
@@ -192,7 +192,7 @@ Your code has been rated at 5.56/10 (previous run: 5.56/10, +0.00)
 
 .........
 ----------------------------------------------------------------------
-Ran 10 tests in 2.575s
+Ran 10 tests in 2.455s
 
 OK
 
