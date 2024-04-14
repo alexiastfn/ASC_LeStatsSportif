@@ -1,6 +1,8 @@
 Stefan Alexia
 332CB
 
+Tema1 - ASC - Le Stats Sportif
+
 * routes.py
 - pentru fiecare request, adaug in coada thread pool-ului un task corespunzator si scriu 2 loguri de informare ([START] si [END])
 - la get_results am un caz unde am considerat ca logul ar fi de tip warning (cand threadpool.requests_dict este None) si de tip exception cand
