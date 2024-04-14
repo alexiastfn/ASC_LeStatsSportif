@@ -1,4 +1,4 @@
-====== Tema 1 - Le Stats Sportif ======
+## ====== Tema 1 - Le Stats Sportif ======
 
 <note important>    
   * **Deadline:** 7 aprilie 2024, ora 23:55. Primiți un bonus de 10% pentru trimiterea temei cu 2 zile înaintea acestui termen, adică înainte de 5 aprilie 2024, ora 23:55.
@@ -11,18 +11,18 @@
   * Dată publicare: 25 martie
 </note>
 
-===== Scopul temei =====
+### ===== Scopul temei =====
 
   * Utilizarea eficientă a elementelor de sincronizare studiate la laborator
   * Implementarea unei aplicații concurente utilizând o problemă clasică (client - server)
   * Aprofundarea anumitor elemente din Python (clase, elemente de sintaxă, threaduri, sincronizare, precum și folosirea modulelor Python pentru lucrul cu threaduri)
 
-===== Enunț =====
+### ===== Enunț =====
 
 În cadrul acestei teme veți avea de implementat un server python care va gestiona o serie de requesturi plecând de la un set de date în format *csv* (comma separated values).
 Serverul va oferi statistici pe baza datelor din csv.
 
-=== Setul de date ===
+### === Setul de date ===
 
 [[https://catalog.data.gov/dataset/nutrition-physical-activity-and-obesity-behavioral-risk-factor-surveillance-system|Setul de date]] conține informații despre nutriție, activitatea fizică și obezitate în Statele Unite ale Americii în perioada 2011 - 2022.
 Datele au fost colectate de către U.S. Department of Health & Human Services.
@@ -39,7 +39,7 @@ Informațiile sunt colectate per stat american (ex. California, Utah, New York) 
 
 Valorile pe care le veți folosi în calculul diverselor statistici la care răspunde aplicația voastră se găsesc în coloana **Data_Value**.
 
-===== Detalii de implementare =====
+### ===== Detalii de implementare =====
 
 Aplicația server pe care o dezvoltați este una multi-threaded.
 Atunci când serverul este pornit, trebuie să încărcați fișierul csv și să extrageți informațiile din el a.î. să puteți calcula statisticile cerute la nivel de request.
@@ -48,27 +48,27 @@ Atunci când serverul este pornit, trebuie să încărcați fișierul csv și s�
  * un endpoit (ex. '/api/states_mean') care primește requestul și va întoarce clientului un **job_id** (ex. "job_id_1", "job_id_2", ..., "job_id_n")
  * endpointul '/api/get_results/job_id' care va verifica dacă job_id-ul este valid, rezultatul calculului este gata sau nu și va returna un răspuns corespunzător (detalii mai jos)
 
-=== Mecanica unui request ===
+### === Mecanica unui request ===
 
 Asociază un job_id requestului, pune jobul (closure care încalsulează unitatea de lucru) într-o coadă de joburi care este procesată de către un **Thread pool**, incrementează job_id-ul intern și returnează clientului job_id-ul asociat.
 
 Un thread va prelua un job din coada de joburi, va efectua operația asociată (ceea ce a fost capturat de către closure) și va scrie rezultatul calculului într-un fișier cu numele job_id-ului în directorul **results/**.
 
-=== Requesturile pe care trebuie să le implementați sunt ===
+### === Requesturile pe care trebuie să le implementați sunt ===
 
-== /api/states_mean ==
+#### == /api/states_mean ==
 
 Primește o întrebare (din **setul de întrebări** de mai sus) și calculează media valorilor înregistrate (**Data_Value**) din intervalul total de timp (2011 - 2022) pentru fiecare stat, și sortează crescător după medie.
 
-== /api/state_mean ==
+#### == /api/state_mean ==
 
 Primește o întrebare (din **setul de întrebări** de mai sus) și un stat, și calculează media valorilor înregistrate (**Data_Value**) din intervalul total de timp (2011 - 2022).
 
-== /api/best5 ==
+#### == /api/best5 ==
 
 Primește o întrebare (din **setul de întrebări** de mai sus) și calculează media valorilor înregistrate (**Data_Value**) din intervalul total de timp (2011 - 2022) și întoarce primele 5 state.
 
-== /api/worst5 ==
+#### == /api/worst5 ==
 
 Primește o întrebare (din **setul de întrebări** de mai sus) și calculează media valorilor înregistrate (**Data_Value**) din intervalul total de timp (2011 - 2022) și întoarce ultimele 5 state.
 
@@ -78,36 +78,36 @@ De exemplu, pentru întrebarea: "Percent of adults who engage in no leisure-time
 Pentru întrebarea: "Percent of adults who engage in muscle-strengthening activities on 2 or more days a week", primele state (best) vor avea scorurile cele mai mari, iar worst vor avea scorurile cele mai mici.
 </note>
 
-== /api/global_mean == 
+#### == /api/global_mean == 
 
 Primește o întrebare (din **setul de întrebări** de mai sus) și calculează media valorilor înregistrate (**Data_Value**) din intervalul total de timp (2011 - 2022) din întregul set de date.
 
-== /api/diff_from_mean ==
+#### == /api/diff_from_mean ==
 
 Primește o întrebare (din **setul de întrebări** de mai sus) și calculează diferența dintre global_mean și state_mean pentru toate statele.
 
-== /api/state_diff_from_mean ==
+#### == /api/state_diff_from_mean ==
 
 Primește o întrebare (din **setul de întrebări** de mai sus) și un stat, și calculează diferența dintre global_mean și state_mean pentru statul respectiv.
 
-== /api/mean_by_category ==
+#### == /api/mean_by_category ==
 
 Primește o întrebare (din **setul de întrebări** de mai sus) și calculează valoarea medie pentru fiecare segment (**Stratification1**) din categoriile (**StratificationCategory1**) fiecărui stat.
 
-== /api/state_mean_by_category ==
+#### == /api/state_mean_by_category ==
 
 Primește o întrebare (din **setul de întrebări** de mai sus) și un stat, și calculează valoarea medie pentru fiecare segment (**Stratification1**) din categoriile (**StratificationCategory1**).
 
-== /api/graceful_shutdown ==
+#### == /api/graceful_shutdown ==
 
 Răspunde la un apel de tipul GET și va duce la notificarea Thread Poolului despre încheierea procesării.
 Scopul acesteia este de a închide aplicația într-un mod graceful: nu se mai acceptă requesturi noi, se termină de procesat requesturile înregistrate până în acel moment (drain mode) și apoi aplicația poate fi oprită.
 
-== /api/jobs ==
+#### == /api/jobs ==
 
 Răspunde la un apel de tipul GET cu un JSON care conține toate JOB_ID-urile de până la acel moment și statusul lor.
 De exemplu:
-<code>
+```
 {
   "status": "done"
   "data": [
@@ -116,42 +116,43 @@ De exemplu:
     { "job_id_3": "running"}
   ]
 }
-</code>
+```
 
-== /api/num_jobs == 
+#### == /api/num_jobs == 
 
 Răspunde la un apel de tipul GET cu numărul joburilor rămase de procesat.
 După un /api/graceful_shutdown și o perioadă de timp, aceasta ar trebui să întoarcă valoarea 0, semnalând astfel că serverul flask poate fi oprit.
 
-== /api/get_results/<job_id> ==
+#### == /api/get_results/<job_id> ==
 
 Răspunde la un apel de tipul GET (job_id-ul este parte din URL).
 Acesta verifică dacă job_id-ul primit este valid și răspunde cu un JSON corespunzător, după cum urmează:
 
 1. JOB_ID-ul este invalid
-<code>
+```
 {
   "status": "error",
   "reason": "Invalid job_id"
 }
-</code>
+```
 
 2. JOB_ID-ul este valid, dar rezultatul procesării nu este gata
-<code>
+```   
 {
   "status": "running",
 }
-</code>
+```
 
 3. JOB_ID-ul este valid și rezultatul procesării este gata
-<code>
+
+```   
 {
   "status": "done",
   "data": <JSON_REZULTAT_PROCESARE>
 }
-</code>
+```
 
-=== Server ===
+## === Server ===
 
 Implementarea serverului se face folosind framework-ul **flask** și va extinde scheletul de cod oferit.
 Mai multe detalii despre Flask găsiți mai jos.
@@ -161,32 +162,32 @@ Python Flask este un micro-framework web open-source care permite dezvoltatorilo
 Flask este minimalist și flexibil, oferind un set de instrumente de bază pentru crearea unei aplicații web, cum ar fi rutele URL, gestionarea cererilor și a sesiunilor, șablonarea și gestionarea cookie-urilor.
 Cu Flask, dezvoltatorii pot construi rapid API-uri sau aplicații web de dimensiuni mici și medii.
 
-== Instalare și activarea mediului de lucru ==
+### Instalare și activarea mediului de lucru ==
 
 Pentru a instala Flask, creați-vă un mediu virtual (pentru a nu instala pachete global, pe sistem) folosind comanda
-<code>
+```
 $ python -m venv venv
-</code>
+```
 
 Activați mediul virtual
-<code>
+```
 $ source venv/bin/activate
-</code>
+```
 
 Și instalați pachetele din fișierul **requirements.txt**
-<code>
+```
 $ python -m pip install -r requirements.txt
-</code>
+```
 
 Pașii de creare a mediului virtual și de instalare a pachetelor se regăsesc în fișierul Makefile.
 Astfel, pentru a vă crea spațiul de lucru, rulați următoarele comenzi în interpretorul vostru de comenzi (verificat în ''bash'' și ''zsh'')
-<code>
+```
 make create_venv
 source venv/bin/activate
 make install
-</code>
+```
 
-== Quickstart ==
+### == Quickstart ==
 
 O rută în cadrul unei aplicații web, cum ar fi în Flask, reprezintă un URL (Uniform Resource Locator) specific către care aplicația web va răspunde cu un anumit conținut sau funcționalitate.
 Atunci când un client (de obicei un browser web) face o cerere către serverul web care găzduiește aplicația Flask, ruta determină ce cod va fi executat și ce răspuns va fi returnat clientului.
@@ -196,7 +197,7 @@ Atunci când un client (de obicei un browser web) face o cerere către serverul 
 Pentru a răspunde la un apel de tipul **POST** (apel folosit pentru a trimite date de către un client către server) folosim același decorator și specificăm **methods=['POST']**.
 De exemplu:
 
-<code>
+```
 from flask import request
 
 @app.route('/', methods=['GET'])
@@ -207,12 +208,12 @@ def index():
 def post_route():
     data = request.json  # Se obțin datele JSON trimise prin POST
     return 'Aceasta este o rută care răspunde la un apel de tip POST'
-</code>
+```
 
 În cazul API-urilor este un best practice ca datele returnate să fie în format JSON, pentru a fi ușor de prelucrat de către alte servicii în mod programatic.
 Pentru a returna un obiect JSON în Flask, vom folosi helperul **jsonify()** ca în exemplul de mai jos:
 
-<code>
+```
 from flask import request, jsonify
 
 @webserver.route('/api/post_endpoint', methods=['POST'])
@@ -229,98 +230,99 @@ def post_endpoint():
     else:
         # Nu acceptăm o altă metodă
         return jsonify({"error": "Method not allowed"}), 405
-</code>
+```
 
-=== Structura input-ului și a output-ului ===
+### === Structura input-ului și a output-ului ===
 
 Interacțiunea cu serverul se va face pe bază de mesaje JSON, după cum este descris mai jos.
 Vă recomandăm să vă uitați în suita de teste, în directoarele input și output pentru a vedea informațiile mult mai detaliat.
 
-== Input ==
+#### == Input ==
 
 Un input pentru un request care primește doar o întrebare în următorul format:
-<code>
+```
 {
   "question": "Percent of adults aged 18 years and older who have an overweight classification"
 }
-</code>
+```
 
 Unul care așteaptă o întrebare și un stat are următorul format:
-<code>
+```
 {
   "question": "Percent of adults who engage in no leisure-time physical activity",
   "state": "South Carolina"
 }
-</code>
+```
 
-== Output ==
+#### == Output ==
 
 Un răspuns JSON va avea mereu structura:
-<code>
+```
 {
   "status": "done",
   "data": <JSON_REZULTAT_PROCESARE>
 }
-</code>
+```
 
 **JSON_REZULTAT_PROCESARE** este un obiect JSON așa cum se regăsește în directorul output, pentru fiecare endpoint din directorul tests.
 
-===== Testare =====
+### ===== Testare =====
 
 Testarea se va realiza folosind atât unitteste, cât și teste funcționale.
 
-==== Rularea testelor ====
+### ==== Rularea testelor ====
 
 Pentru a rula testele, folosiți fișierul ''Makefile''.
 Într-un shell 1) activați mediul virtual și 2) porniți serverul
-<code>
+```
 source venv/bin/activate
 make run_server
-</code>
+```
 
 Într-un alt shell 1) activați mediul virtual și 2) porniți checkerul
-<code>
+```
 source venv/bin/activate
 make run_tests
-</code>
+```
 
 <note important>
 Trebuie să vă asigurați că ați activat mediul virtual înainte de a rula comenzile din make.
-<code>
+```
 source venv/bin/activate
-</code>
+```
 
 Dacă nu ați activat mediul virtual, ''make'' vă va arunca următoarea eroare (linia, ex 8, poate să difere).
-<code>
+```
 Makefile:8: *** "You must activate your virtual environment. Exiting...".  Stop.
-</code>
+```
 
 </note>
 
-==== Unittesting ====
+### ==== Unittesting ====
 
 Pentru testarea funcțiilor din **server** veți folosi modulul de [[https://docs.python.org/3/library/unittest.html | unittesting]] al limbajului Python.
 
 <spoiler Click pentru sumar despre unittesting>
 Pentru a defini un set de unitteste trebuie să vă definiți o clasă care moștenește clasa ''unittest.TestCase''
-<code python demo_unittest.py>
+ ```python demo_unittest.py
 import unittest
 
 class TestStringMethods(unittest.TestCase):
 
     def test_upper(self):
         self.assertEqual('foo'.upper(), 'FOO')
-</code>
+
+```
 
 Pentru a defini un test, numele metodei trebuie să înceapă cu prefixul ''test_'', așa cum puteți observa în exemplul de mai sus: ''test_upper''.
 Verificările din corpul metodei se fac folosind metodele ''assert*'', în exemplul de mai sus a fost folosită metoda ''assertEqual''. O listă completă a metodelor de verificare disponibile este prezentată în [[https://docs.python.org/3/library/unittest.html#assert-methods | documentație]].
 
 Pentru a rula testele, folosim subcomanda unittest:
-<code bash>
+```bash
 $ python3 -m unittest demo_unittest.py
 $ # puteti folosi optiunea -v pentru mai multe detalii
 $ python3 -m unittest -v demo_unittest.py
-</code>
+```
 </spoiler>
 
 Pentru a testa comportamentul definiți în fișierul ''unittests/TestWebserver.py'' o clasă de testare numită ''TestWebserver''.
@@ -330,7 +332,7 @@ Dacă definiți alte metode, va trebui să adăugați teste și pentru acestea.
 Vă recomandăm să folosiți metoda [[https://docs.python.org/3/library/unittest.html#unittest.TestCase.setUp | setUp]] pentru a inițializa o instanță a clasei testate și orice altceva ce vă ajută în testarea codului.
 Un exemplu de utilizare a metodei ''setUp'' este disponibil în [[https://docs.python.org/3/library/unittest.html#organizing-test-code | documentație]].
 
-===== Logging =====
+### ===== Logging =====
 
 Vrem să utilizăm fișiere de logging în aplicațiile pe care le dezvoltăm pentru a putea urmări flowul acestora a.î. să ne ajute în procesul de debug.
 
@@ -347,7 +349,7 @@ Asigurați-vă că folosiți gmtime, și nu localtime. Pentru aceasta trebuie s�
 
 O descriere completă a cum puteți utiliza modului de logging este prezentă în categoria [[https://docs.python.org/3/howto/logging.html | HOWTO]] a documentației.
 
-===== Precizări încărcare =====
+### ===== Precizări încărcare =====
 
 Arhiva temei va fi încărcată pe [[https://curs.upb.ro/2022/mod/assign/view.php?id=156013|moodle - TODO]]
 
@@ -364,7 +366,7 @@ Pentru a documenta realizarea temei, vă recomandăm să folosiți template-ul d
 </note>
 
 
-===== Punctare =====
+### ===== Punctare =====
 
 <note important>Tema va fi verificată automat, folosind infrastructura de testare, pe baza unor teste definite în directorul ''tests''. </note>
 
@@ -394,7 +396,7 @@ Temele vor fi testate împotriva plagiatului. Orice tentativă de copiere va fi 
 Rezultatele notării automate este orientativă și poate fi afectată de corectarea manuală.
 </note>
 
-==== Pylint ====
+### ==== Pylint ====
 
 Vom testa sursele voastre cu [[https://www.pylint.org/|pylint]] configurat conform fișierului **''pylintrc''** din cadrul repo-ului dedicat temei. Atenție, __rulăm pylint doar pe modulele completate și adăugate de voi__, nu și pe cele ale testerului. 
 
@@ -402,7 +404,7 @@ Deoarece apar diferențe de scor între versiuni diferite de pylint, vom testa t
 
 Vom face depunctări de până la -5pct dacă verificarea făcută cu pylint vă dă un scor mai mic de 8.
 
-==== Observații ====
+### ==== Observații ====
 
   * Pot exista depunctări mai mari decât este specificat în secţiunea [[ #notare | Notare]] pentru implementări care nu respectă obiectivele temei și pentru situatii care nu sunt acoperite în mod automat de către sistemul de testare
   * Implementarea şi folosirea metodelor oferite în schelet este obligatorie
@@ -410,7 +412,7 @@ Vom face depunctări de până la -5pct dacă verificarea făcută cu pylint vă
   * Bug-urile de sincronizare, prin natura lor sunt nedeterministe; o temă care conţine astfel de bug-uri poate obţine punctaje diferite la rulări succesive; în acest caz punctajul temei va fi cel dat de tester în momentul corectării
   * Recomandăm testarea temei în cât mai multe situații de load al sistemului și pe cât mai multe sisteme pentru a descoperi bug-urile de sincronizare
 
-===== Resurse necesare realizării temei =====
+### ===== Resurse necesare realizării temei =====
 
 Pentru a clona [[https://gitlab.cs.pub.ro/asc/asc-public | repo-ul]] și a accesa resursele temei 1:
 
@@ -421,7 +423,7 @@ student@asc:~/assignments$ cd 1-le_stats_sportif
 </code>
 
 
-===== Suport, întrebări și clarificări =====
+### ===== Suport, întrebări și clarificări =====
 
 Pentru întrebări sau nelămuriri legate de temă folosiți [[https://curs.upb.ro/2023/mod/forum/view.php?id=148546|forumul temei]]. 
 
