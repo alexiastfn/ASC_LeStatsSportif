@@ -1,140 +1,300 @@
 from app import webserver
 from flask import request, jsonify
-
-import os
 import json
+import os
+from app.task_runner import *
+from app.logger import server_logger
 
-# Example endpoint definition
-@webserver.route('/api/post_endpoint', methods=['POST'])
-def post_endpoint():
-    if request.method == 'POST':
-        # Assuming the request contains JSON data
-        data = request.json
-        print(f"got data in post {data}")
 
-        # Process the received data
-        # For demonstration purposes, just echoing back the received data
-        response = {"message": "Received data successfully", "data": data}
-
-        # Sending back a JSON response
-        return jsonify(response)
-    else:
-        # Method Not Allowed
-        return jsonify({"error": "Method not allowed"}), 405
-
-@webserver.route('/api/get_results/<job_id>', methods=['GET'])
+@webserver.route("/api/get_results/<job_id>", methods=["GET"])
 def get_response(job_id):
-    print(f"JobID is {job_id}")
-    # TODO
-    # Check if job_id is valid
+    job_id = int(job_id)
+    server_logger.info("[START] /api/get_results/{}".format(job_id))
 
-    # Check if job_id is done and return the result
-    #    res = res_for(job_id)
-    #    return jsonify({
-    #        'status': 'done',
-    #        'data': res
-    #    })
+    if job_id > webserver.job_counter:
+        server_logger.error("[END] - error /api/get_results/{}".format(job_id))
+        return jsonify({"status": "error", "reason": "Invalid job_id"})
 
-    # If not, return running status
-    return jsonify({'status': 'NotImplemented'})
+    if job_id not in webserver.tasks_runner.requests_dict:
+        server_logger.warning("[END] - running /api/get_results/{}".format(job_id))
+        return jsonify({"status": "running"})
 
-@webserver.route('/api/states_mean', methods=['POST'])
+    try:
+        if webserver.tasks_runner.requests_dict[job_id] is True:
+            with open(f"results/out-{job_id}.json", "r") as output_file:
+                content = output_file.read()
+                job_data = json.loads(content)
+                server_logger.info(
+                    "[END] - done /api/get_results/{} data{}".format(job_id, job_data)
+                )
+                return jsonify({"status": "done", "data": job_data})
+        else:
+            server_logger.info("[END] - running /api/get_results/{}".format(job_id))
+            return jsonify({"status": "running"})
+
+    except json.JSONDecodeError:
+        server_logger.exception("[END] - running /api/get_results/{}".format(job_id))
+        return jsonify({"status": "running"})
+
+
+@webserver.route("/api/states_mean", methods=["POST"])
 def states_mean_request():
-    # Get request data
+    server_logger.info("[START] /api/states_mean/{}".format(webserver.job_counter))
+    data_dict = webserver.data_ingestor.dictionary_data
     data = request.json
-    print(f"Got request {data}")
+    question = data.get("question")
+    webserver.tasks_runner.addTask(
+        StatesMeanRequest(
+            data_dict,
+            question,
+            webserver.job_counter,
+            webserver.tasks_runner.requests_dict,
+            webserver.tasks_runner.mutex,
+        )
+    )
+    server_logger.info("[END] /api/states_mean/{}".format(webserver.job_counter))
+    webserver.job_counter += 1
+    return jsonify({"status": "done", "job_id": webserver.job_counter - 1})
 
-    # TODO
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
 
-    return jsonify({"status": "NotImplemented"})
+def save_to_text_file(self, sorted_means, file_path):
+    with open(file_path, "w") as file:
+        for state, mean in sorted_means:
+            file.write(f"{state}: {mean}\n")
 
-@webserver.route('/api/state_mean', methods=['POST'])
+
+@webserver.route("/api/state_mean", methods=["POST"])
 def state_mean_request():
-    # TODO
-    # Get request data
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
+    server_logger.info("[START] /api/state_mean/{}".format(webserver.job_counter))
+    data_dict = webserver.data_ingestor.dictionary_data
 
-    return jsonify({"status": "NotImplemented"})
+    data = request.json
+    print(data)
+    question = data.get("question")
+    state = data.get("state")
+
+    webserver.tasks_runner.addTask(
+        StateMeanRequest(
+            data_dict,
+            question,
+            state,
+            webserver.job_counter,
+            webserver.tasks_runner.requests_dict,
+            webserver.tasks_runner.mutex,
+        )
+    )
+    server_logger.info("[END] /api/state_mean/{}".format(webserver.job_counter))
+    webserver.job_counter += 1
+    return jsonify({"status": "done", "job_id": webserver.job_counter - 1})
 
 
-@webserver.route('/api/best5', methods=['POST'])
+@webserver.route("/api/best5", methods=["POST"])
 def best5_request():
-    # TODO
-    # Get request data
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
+    server_logger.info("[START] /api/best5/{}".format(webserver.job_counter))
+    data_dict = webserver.data_ingestor.dictionary_data
+    data = request.json
+    question = data.get("question")
 
-    return jsonify({"status": "NotImplemented"})
+    if question in webserver.data_ingestor.questions_best_is_max:
+        max = 1  # cele mai bune rezultate => worst
+    else:
+        max = 0  # cele mai bune rezultate => best
 
-@webserver.route('/api/worst5', methods=['POST'])
+    webserver.tasks_runner.addTask(
+        BestOrWorstRequest(
+            data_dict,
+            question,
+            max,
+            webserver.job_counter,
+            webserver.tasks_runner.requests_dict,
+            webserver.tasks_runner.mutex,
+        )
+    )
+    server_logger.info("[END] /api/best5/{}".format(webserver.job_counter))
+    webserver.job_counter += 1
+    return jsonify({"status": "done", "job_id": webserver.job_counter - 1})
+
+
+@webserver.route("/api/worst5", methods=["POST"])
 def worst5_request():
-    # TODO
-    # Get request data
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
+    server_logger.info("[START] /api/worst5/{}".format(webserver.job_counter))
+    data_dict = webserver.data_ingestor.dictionary_data
+    data = request.json
+    question = data.get("question")
 
-    return jsonify({"status": "NotImplemented"})
+    if question in webserver.data_ingestor.questions_best_is_max:
+        max = 0  # cele mai bune rezultate => cele mai mari
+    else:
+        max = 1  # cele mai bune rezultate => cele mai mici
 
-@webserver.route('/api/global_mean', methods=['POST'])
+    webserver.tasks_runner.addTask(
+        BestOrWorstRequest(
+            data_dict,
+            question,
+            max,
+            webserver.job_counter,
+            webserver.tasks_runner.requests_dict,
+            webserver.tasks_runner.mutex,
+        )
+    )
+    server_logger.info("[END] /api/worst5/{}".format(webserver.job_counter))
+    webserver.job_counter += 1
+    return jsonify({"status": "done", "job_id": webserver.job_counter - 1})
+
+
+@webserver.route("/api/global_mean", methods=["POST"])
 def global_mean_request():
-    # TODO
-    # Get request data
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
+    server_logger.info("[START] /api/global_mean/{}".format(webserver.job_counter))
+    data_dict = webserver.data_ingestor.dictionary_data
+    data = request.json
+    question = data.get("question")
+    webserver.tasks_runner.addTask(
+        GlobalMeanRequest(
+            data_dict,
+            question,
+            webserver.job_counter,
+            webserver.tasks_runner.requests_dict,
+            webserver.tasks_runner.mutex,
+        )
+    )
+    server_logger.info("[END] /api/global_mean/{}".format(webserver.job_counter))
+    webserver.job_counter += 1
+    return jsonify({"status": "done", "job_id": webserver.job_counter - 1})
 
-    return jsonify({"status": "NotImplemented"})
 
-@webserver.route('/api/diff_from_mean', methods=['POST'])
+@webserver.route("/api/diff_from_mean", methods=["POST"])
 def diff_from_mean_request():
-    # TODO
-    # Get request data
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
+    server_logger.info("[START] /api/diff_from_mean/{}".format(webserver.job_counter))
+    data_dict = webserver.data_ingestor.dictionary_data
+    data = request.json
+    question = data.get("question")
+    webserver.tasks_runner.addTask(
+        DiffFromMeanRequest(
+            data_dict,
+            question,
+            webserver.job_counter,
+            webserver.tasks_runner.requests_dict,
+            webserver.tasks_runner.mutex,
+        )
+    )
+    server_logger.info("[END] /api/diff_from_mean/{}".format(webserver.job_counter))
+    webserver.job_counter += 1
+    return jsonify({"status": "done", "job_id": webserver.job_counter - 1})
 
-    return jsonify({"status": "NotImplemented"})
 
-@webserver.route('/api/state_diff_from_mean', methods=['POST'])
+@webserver.route("/api/state_diff_from_mean", methods=["POST"])
 def state_diff_from_mean_request():
-    # TODO
-    # Get request data
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
+    server_logger.info(
+        "[START] /api/state_diff_from_mean/{}".format(webserver.job_counter)
+    )
+    data_dict = webserver.data_ingestor.dictionary_data
 
-    return jsonify({"status": "NotImplemented"})
+    data = request.json
+    print(data)
+    question = data.get("question")
+    state = data.get("state")
 
-@webserver.route('/api/mean_by_category', methods=['POST'])
+    webserver.tasks_runner.addTask(
+        StateDiffFromMeanRequest(
+            data_dict,
+            question,
+            state,
+            webserver.job_counter,
+            webserver.tasks_runner.requests_dict,
+            webserver.tasks_runner.mutex,
+        )
+    )
+    server_logger.info(
+        "[END] /api/state_diff_from_mean/{}".format(webserver.job_counter)
+    )
+    webserver.job_counter += 1
+    return jsonify({"status": "done", "job_id": webserver.job_counter - 1})
+
+
+@webserver.route("/api/mean_by_category", methods=["POST"])
 def mean_by_category_request():
-    # TODO
-    # Get request data
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
+    server_logger.info("[START] /api/mean_by_category/{}".format(webserver.job_counter))
+    data_dict = webserver.data_ingestor.dictionary_data
+    data = request.json
+    question = data.get("question")
+    webserver.tasks_runner.addTask(
+        StatesMeanCategoryRequest(
+            data_dict,
+            question,
+            webserver.job_counter,
+            webserver.tasks_runner.requests_dict,
+            webserver.tasks_runner.mutex,
+        )
+    )
+    server_logger.info("[END] /api/mean_by_category/{}".format(webserver.job_counter))
+    webserver.job_counter += 1
+    return jsonify({"status": "done", "job_id": webserver.job_counter - 1})
 
-    return jsonify({"status": "NotImplemented"})
 
-@webserver.route('/api/state_mean_by_category', methods=['POST'])
+@webserver.route("/api/state_mean_by_category", methods=["POST"])
 def state_mean_by_category_request():
-    # TODO
-    # Get request data
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
+    server_logger.info(
+        "[START] /api/state_mean_by_category/{}".format(webserver.job_counter)
+    )
+    data_dict = webserver.data_ingestor.dictionary_data
 
-    return jsonify({"status": "NotImplemented"})
+    data = request.json
+    print(data)
+    question = data.get("question")
+    state = data.get("state")
+
+    webserver.tasks_runner.addTask(
+        StateMeanCategoryRequest(
+            data_dict,
+            question,
+            state,
+            webserver.job_counter,
+            webserver.tasks_runner.requests_dict,
+            webserver.tasks_runner.mutex,
+        )
+    )
+    server_logger.info(
+        "[END] /api/state_mean_by_category/{}".format(webserver.job_counter)
+    )
+    webserver.job_counter += 1
+    return jsonify({"status": "done", "job_id": webserver.job_counter - 1})
+
+
+@webserver.route("/api/graceful_shutdown", methods=["GET"])
+def graceful_shutdown():
+    server_logger.info("[START] graceful_shutdown")
+    webserver.tasks_runner.stop()
+    server_logger.info("[END] graceful_shutdown")
+    return jsonify({"status": "done"})
+
+
+@webserver.route("/api/num_jobs", methods=["GET"])
+def num_jobs():
+    server_logger.info("[START] /api/num_jobs/")
+    output_files = os.listdir("results/")
+    done_jobs = len(output_files)
+    result = webserver.job_counter - done_jobs
+    server_logger.info("[END] /api/num_jobs/{}".format(result))
+
+    return jsonify({"num jobs": result})
+
+
+@webserver.route("/api/jobs", methods=["GET"])
+def api_jobs():
+    server_logger.info("[START] /api/jobs/")
+    job_statuses = []
+    for job_id, is_completed in webserver.tasks_runner.requests_dict.items():
+        status = "done" if is_completed else "running"
+        job_statuses.append({f"job_id_{job_id}": status})
+
+    result = {"status": "done", "data": job_statuses}
+    server_logger.info("[END] /api/jobs/{}".format(result))
+    return jsonify(result)
+
 
 # You can check localhost in your browser to see what this displays
-@webserver.route('/')
-@webserver.route('/index')
+@webserver.route("/")
+@webserver.route("/index")
 def index():
     routes = get_defined_routes()
     msg = f"Hello, World!\n Interact with the webserver using one of the defined routes:\n"
@@ -147,9 +307,10 @@ def index():
     msg += paragraphs
     return msg
 
+
 def get_defined_routes():
     routes = []
     for rule in webserver.url_map.iter_rules():
-        methods = ', '.join(rule.methods)
-        routes.append(f"Endpoint: \"{rule}\" Methods: \"{methods}\"")
+        methods = ", ".join(rule.methods)
+        routes.append(f'Endpoint: "{rule}" Methods: "{methods}"')
     return routes
