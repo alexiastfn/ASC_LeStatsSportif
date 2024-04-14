@@ -1,14 +1,11 @@
 import logging
-import os
-import shutil
 from logging.handlers import RotatingFileHandler
 import time
 
 
 class ServerLogger:
     def __init__(
-        self, filename="webserver.log", maxBytes=1024, backupCount=5
-    ):
+        self, filename="webserver.log", maxBytes=1024, backupCount=5):
 
         self.logger = logging.getLogger("ServerLogger")
         self.logger.setLevel(logging.DEBUG)
