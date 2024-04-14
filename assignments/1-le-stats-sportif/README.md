@@ -103,7 +103,7 @@ Primește o întrebare (din **setul de întrebări** de mai sus) și un stat, ș
 Răspunde la un apel de tipul GET și va duce la notificarea Thread Poolului despre încheierea procesării.
 Scopul acesteia este de a închide aplicația într-un mod graceful: nu se mai acceptă requesturi noi, se termină de procesat requesturile înregistrate până în acel moment (drain mode) și apoi aplicația poate fi oprită.
 
-####== /api/jobs ==
+#### == /api/jobs ==
 
 Răspunde la un apel de tipul GET cu un JSON care conține toate JOB_ID-urile de până la acel moment și statusul lor.
 De exemplu:
