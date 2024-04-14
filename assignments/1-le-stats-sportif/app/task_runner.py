@@ -58,7 +58,7 @@ class StatesMeanRequest(Task):
         with open(output_path, "w") as json_file:
             json.dump(dict(sorted_states_by_mean), json_file)
             self.acces_requests_dict(True)
-            server_logger.info("[MIDDLE] /api/states_mean/{}".format(self.job_id))
+            server_logger.info("[MIDDLE] /api/states_mean/%s", self.job_id)
 
 
 class StateMeanRequest(Task):
@@ -90,7 +90,7 @@ class StateMeanRequest(Task):
             result = {self.state: state_mean}
             json.dump(result, json_file)
             self.acces_requests_dict(True)
-            server_logger.info("[MIDDLE] /api/state_mean/{}".format(self.job_id))
+            server_logger.info("[MIDDLE] /api/state_mean/%s", self.job_id)
 
 
 class BestOrWorstRequest(Task):
@@ -127,7 +127,7 @@ class BestOrWorstRequest(Task):
         with open(output_path, "w") as json_file:
             json.dump(dict(states), json_file)
             self.acces_requests_dict(True)
-            server_logger.info("[MIDDLE] /api/best5/{}".format(self.job_id))
+            server_logger.info("[MIDDLE] /api/best5/%s", self.job_id)
 
 
 class GlobalMeanRequest(Task):
@@ -157,7 +157,7 @@ class GlobalMeanRequest(Task):
             result = {"global_mean": mean_value}
             json.dump(result, json_file)
             self.acces_requests_dict(True)
-            server_logger.info("[MIDDLE] /api/global_mean/{}".format(self.job_id))
+            server_logger.info("[MIDDLE] /api/global_mean/%s", self.job_id)
 
 
 class DiffFromMeanRequest(Task):
@@ -186,7 +186,7 @@ class DiffFromMeanRequest(Task):
         with open(output_path, "w") as json_file:
             json.dump(dict(dif_dict), json_file)
             self.acces_requests_dict(True)
-            server_logger.info("[MIDDLE]  /api/diff_from_mean/{}".format(self.job_id))
+            server_logger.info("[MIDDLE] /api/diff_from_mean/%s", self.job_id)
 
 
 class StateDiffFromMeanRequest(Task):
@@ -222,9 +222,7 @@ class StateDiffFromMeanRequest(Task):
             result = {self.state: state_diff_from_mean}
             json.dump(result, json_file)
             self.acces_requests_dict(True)
-            server_logger.info(
-                "[MIDDLE] /api/state_diff_from_mean/{}".format(self.job_id)
-            )
+            server_logger.info("[MIDDLE] /api/state_diff_from_mean/%s", self.job_id)
 
 
 class StatesMeanCategoryRequest(Task):
@@ -263,7 +261,7 @@ class StatesMeanCategoryRequest(Task):
         with open(output_path, "w") as json_file:
             json.dump(dict(state_mean_category_dict), json_file)
             self.acces_requests_dict(True)
-            server_logger.info("[MIDDLE] /api/mean_by_category/{}".format(self.job_id))
+            server_logger.info("[MIDDLE] /api/mean_by_category/%s", self.job_id)
 
 
 class StateMeanCategoryRequest(Task):
@@ -302,9 +300,7 @@ class StateMeanCategoryRequest(Task):
         with open(output_path, "w") as json_file:
             json.dump(answer, json_file)
             self.acces_requests_dict(True)
-            server_logger.info(
-                "[MIDDLE] /api/state_mean_by_category/{}".format(self.job_id)
-            )
+            server_logger.info("[MIDDLE] /api/state_mean_by_category/%s", self.job_id)
 
 
 class StopRequest(Task):
