@@ -1,3 +1,6 @@
+"""
+Module in which there is the implementation of the thread pool, threads and tasks
+"""
 import threading
 import os
 from threading import Thread
@@ -8,6 +11,7 @@ from app.logger import server_logger
 
 
 class Task:
+    """ Task Class - the parent class of every type of request """
     def __init__(self, data_dict, question, job_id, requests_map, mutex):
         self.data_dict = data_dict
         self.question = question
@@ -16,6 +20,7 @@ class Task:
         self.mutex = mutex
 
     def acces_requests_dict(self, flag):
+        """ To keep track of invalid/running/done tasks """
         if self.mutex is None and self.acces_requests_dict is False:
             return
         with self.mutex:
@@ -23,10 +28,12 @@ class Task:
 
 
 class StatesMeanRequest(Task):
+    """ StatesMeanRequest - for the '/api/states_mean' requests """
     def __init__(self, data_dict, question, job_id, requests_map, mutex):
         super().__init__(data_dict, question, job_id, requests_map, mutex)
 
     def helper(self):
+        """ The logic of the request """
         state_sums = defaultdict(float)
         state_counts = defaultdict(int)
 
@@ -44,6 +51,7 @@ class StatesMeanRequest(Task):
         return sorted_states_by_mean
 
     def execute(self):
+        """ Writing in the necessary output file """
         sorted_states_by_mean = self.helper()
 
         output_path = f"results/out-{self.job_id}.json"
@@ -54,11 +62,13 @@ class StatesMeanRequest(Task):
 
 
 class StateMeanRequest(Task):
+    """ StateMeanRequest - for the '/api/state_mean' requests """
     def __init__(self, data_dict, question, state, job_id, requests_map, mutex):
         super().__init__(data_dict, question, job_id, requests_map, mutex)
         self.state = state
 
     def helper(self):
+        """ The logic of the request """
         state_sum = 0.0
         state_count = 0
 
@@ -72,6 +82,7 @@ class StateMeanRequest(Task):
         return state_mean
 
     def execute(self):
+        """ Writing in the necessary output file """
         state_mean = self.helper()
 
         output_path = f"results/out-{self.job_id}.json"
@@ -83,11 +94,13 @@ class StateMeanRequest(Task):
 
 
 class BestOrWorstRequest(Task):
+    """ BestOrWorstRequest - for the '/api/best5 or worst5' requests """
     def __init__(self, data_dict, question, max, job_id, requests_map, mutex):
         super().__init__(data_dict, question, job_id, requests_map, mutex)
         self.max = max
 
     def helper(self):
+        """ The logic of the request """
         state_sums = defaultdict(float)
         state_counts = defaultdict(int)
 
@@ -108,6 +121,7 @@ class BestOrWorstRequest(Task):
         return states
 
     def execute(self):
+        """ Writing in the necessary output file """
         states = self.helper()
         output_path = f"results/out-{self.job_id}.json"
         with open(output_path, "w") as json_file:
@@ -117,10 +131,12 @@ class BestOrWorstRequest(Task):
 
 
 class GlobalMeanRequest(Task):
+    """ GlobalMeanRequest - for the '/api/global_mean' requests """
     def __init__(self, data_dict, question, job_id, requests_map, mutex):
         super().__init__(data_dict, question, job_id, requests_map, mutex)
 
     def helper(self):
+        """ The logic of the request """
         total_sum = 0.0
         count = 0
 
@@ -134,6 +150,7 @@ class GlobalMeanRequest(Task):
         return mean_value
 
     def execute(self):
+        """ Writing in the necessary output file """
         mean_value = self.helper()
         output_path = f"results/out-{self.job_id}.json"
         with open(output_path, "w") as json_file:
@@ -144,10 +161,12 @@ class GlobalMeanRequest(Task):
 
 
 class DiffFromMeanRequest(Task):
+    """ DiffFromMeanRequest - for the '/api/diff_from_mean' requests """
     def __init__(self, data_dict, question, job_id, requests_map, mutex):
         super().__init__(data_dict, question, job_id, requests_map, mutex)
 
     def helper(self):
+        """ The logic of the request """
         states_mean_req = StatesMeanRequest(
             self.data_dict, self.question, self.job_id, self.requests_map, self.mutex
         )
@@ -161,6 +180,7 @@ class DiffFromMeanRequest(Task):
         return dif_dict
 
     def execute(self):
+        """ Writing in the necessary output file """
         dif_dict = self.helper()
         output_path = f"results/out-{self.job_id}.json"
         with open(output_path, "w") as json_file:
@@ -170,11 +190,13 @@ class DiffFromMeanRequest(Task):
 
 
 class StateDiffFromMeanRequest(Task):
+    """ StateDiffFromMeanRequest - for the '/api/state_diff_from_mean' requests """
     def __init__(self, data_dict, question, state, job_id, requests_map, mutex):
         super().__init__(data_dict, question, job_id, requests_map, mutex)
         self.state = state
 
     def helper(self):
+        """ The logic of the request """
         state_mean_req = StateMeanRequest(
             self.data_dict,
             self.question,
@@ -193,6 +215,7 @@ class StateDiffFromMeanRequest(Task):
         return state_diff_from_mean
 
     def execute(self):
+        """ Writing in the necessary output file """
         state_diff_from_mean = self.helper()
         output_path = f"results/out-{self.job_id}.json"
         with open(output_path, "w") as json_file:
@@ -205,10 +228,12 @@ class StateDiffFromMeanRequest(Task):
 
 
 class StatesMeanCategoryRequest(Task):
+    """ StatesMeanCategoryRequest - for the '/api/mean_by_category' requests """
     def __init__(self, data_dict, question, job_id, requests_map, mutex):
         super().__init__(data_dict, question, job_id, requests_map, mutex)
 
     def helper(self):
+        """ The logic of the request """
         sum_dict = defaultdict(float)
         count_dict = defaultdict(int)
 
@@ -231,6 +256,7 @@ class StatesMeanCategoryRequest(Task):
         return mean_values_sorted
 
     def execute(self):
+        """ Writing in the necessary output file """
         state_mean_category_dict = self.helper()
 
         output_path = f"results/out-{self.job_id}.json"
@@ -241,11 +267,13 @@ class StatesMeanCategoryRequest(Task):
 
 
 class StateMeanCategoryRequest(Task):
+    """ StateMeanCategoryRequest - for the '/api/state_mean_by_category' requests """
     def __init__(self, data_dict, question, state, job_id, requests_map, mutex):
         super().__init__(data_dict, question, job_id, requests_map, mutex)
         self.state = state
 
     def helper(self):
+        """ The logic of the request """
         sum_dict = defaultdict(float)
         count_dict = defaultdict(int)
 
@@ -265,6 +293,7 @@ class StateMeanCategoryRequest(Task):
         return mean_values_sorted
 
     def execute(self):
+        """ Writing in the necessary output file """
 
         state_mean_category_dict = self.helper()
         answer = {self.state: state_mean_category_dict}
@@ -279,16 +308,19 @@ class StateMeanCategoryRequest(Task):
 
 
 class StopRequest(Task):
+    """ StopRequest - when the thread pool needs to shutdown """
     def __init__(self):
         super().__init__(None, None, 0, None, None)
 
 
 class TaskRunner(Thread):
+    """ TaskRunner - Thread's blue print """
     def __init__(self, queue):
         super().__init__()
         self.q = queue
 
     def run(self):
+        """ Thread's implementation """
         while True:
             temp_task = self.q.get()
             if isinstance(temp_task, StopRequest):
@@ -299,15 +331,17 @@ class TaskRunner(Thread):
 
 
 class ThreadPool:
+    """ ThreadPool - the ThreadPool class """
     def __init__(self):
         self.queue = Queue()
         self.stop = False
         self.requests_dict = {}
         self.mutex = threading.Lock()
-        self.no_threads = self.getNoThreads()
+        self.no_threads = self.get_no_threads()
         self.threads = []
 
-    def getNoThreads(self):
+    def get_no_threads(self):
+        """ getNoThreads - number of threads """
         num_threads = os.environ.get("TP_NUM_OF_THREADS")
         if num_threads is not None:
             return int(num_threads)
@@ -315,12 +349,14 @@ class ThreadPool:
             return os.cpu_count()
 
     def start(self):
+        """ start - activate the threads """
         for i in range(self.no_threads):
             t = TaskRunner(self.queue)
             self.threads.append(t)
             t.start()
 
     def stop(self):
+        """ end - kill the threads """
         for i in range(self.no_threads):
             self.queue.put(StopRequest())
 
@@ -328,4 +364,5 @@ class ThreadPool:
             self.threads[i].join()
 
     def addTask(self, task):
+        """ addTask - add request in threadpool's queue """
         self.queue.put(task)

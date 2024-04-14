@@ -1,7 +1,8 @@
+""" Data Handler Module """
 import csv
 
-
 class DataIngestor:
+    """ Manipulation of the .csv file """
     def __init__(self, csv_path: str):
         self.data = self.read_csv(csv_path)
         # TODO: Read csv from csv_path
@@ -30,6 +31,7 @@ class DataIngestor:
         ]
 
     def read_csv(self, csv_path):
+        """ Translate the file into a dictionary """
         self.dictionary_data = []
         with open(csv_path, "r") as file:
             csv_reader = csv.DictReader(file)

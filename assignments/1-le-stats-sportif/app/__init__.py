@@ -1,8 +1,9 @@
-from flask import Flask
+""" App Module """
+import os
 from app.data_ingestor import DataIngestor
 from app.logger import server_logger
 from app.task_runner import ThreadPool
-import os
+from flask import Flask
 
 webserver = Flask(__name__)
 

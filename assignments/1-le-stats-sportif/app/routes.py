@@ -1,13 +1,15 @@
+""" Routes Module """
+import os
 from app import webserver
 from flask import request, jsonify
 import json
-import os
 from app.task_runner import *
 from app.logger import server_logger
 
 
 @webserver.route("/api/get_results/<job_id>", methods=["GET"])
 def get_response(job_id):
+    """ Implement the get_results route """
     job_id = int(job_id)
     server_logger.info("[START] /api/get_results/{}".format(job_id))
 
@@ -39,6 +41,7 @@ def get_response(job_id):
 
 @webserver.route("/api/states_mean", methods=["POST"])
 def states_mean_request():
+    """ Implement the states_mean route """
     server_logger.info("[START] /api/states_mean/{}".format(webserver.job_counter))
     data_dict = webserver.data_ingestor.dictionary_data
     data = request.json
@@ -58,6 +61,7 @@ def states_mean_request():
 
 
 def save_to_text_file(self, sorted_means, file_path):
+    """ Original function from file """
     with open(file_path, "w") as file:
         for state, mean in sorted_means:
             file.write(f"{state}: {mean}\n")
@@ -65,6 +69,7 @@ def save_to_text_file(self, sorted_means, file_path):
 
 @webserver.route("/api/state_mean", methods=["POST"])
 def state_mean_request():
+    """ Implement the state_mean route """
     server_logger.info("[START] /api/state_mean/{}".format(webserver.job_counter))
     data_dict = webserver.data_ingestor.dictionary_data
 
@@ -90,6 +95,7 @@ def state_mean_request():
 
 @webserver.route("/api/best5", methods=["POST"])
 def best5_request():
+    """ Implement the best_5 route """
     server_logger.info("[START] /api/best5/{}".format(webserver.job_counter))
     data_dict = webserver.data_ingestor.dictionary_data
     data = request.json
@@ -117,6 +123,7 @@ def best5_request():
 
 @webserver.route("/api/worst5", methods=["POST"])
 def worst5_request():
+    """ Implement the worst_5 route """
     server_logger.info("[START] /api/worst5/{}".format(webserver.job_counter))
     data_dict = webserver.data_ingestor.dictionary_data
     data = request.json
@@ -144,6 +151,7 @@ def worst5_request():
 
 @webserver.route("/api/global_mean", methods=["POST"])
 def global_mean_request():
+    """ Implement the global_mean route """
     server_logger.info("[START] /api/global_mean/{}".format(webserver.job_counter))
     data_dict = webserver.data_ingestor.dictionary_data
     data = request.json
@@ -164,6 +172,7 @@ def global_mean_request():
 
 @webserver.route("/api/diff_from_mean", methods=["POST"])
 def diff_from_mean_request():
+    """ Implement the diff_from_mean route """
     server_logger.info("[START] /api/diff_from_mean/{}".format(webserver.job_counter))
     data_dict = webserver.data_ingestor.dictionary_data
     data = request.json
@@ -184,6 +193,7 @@ def diff_from_mean_request():
 
 @webserver.route("/api/state_diff_from_mean", methods=["POST"])
 def state_diff_from_mean_request():
+    """ Implement the state_diff_from_mean route """
     server_logger.info(
         "[START] /api/state_diff_from_mean/{}".format(webserver.job_counter)
     )
@@ -213,6 +223,7 @@ def state_diff_from_mean_request():
 
 @webserver.route("/api/mean_by_category", methods=["POST"])
 def mean_by_category_request():
+    """ Implement the mean_by_category route """
     server_logger.info("[START] /api/mean_by_category/{}".format(webserver.job_counter))
     data_dict = webserver.data_ingestor.dictionary_data
     data = request.json
@@ -233,6 +244,7 @@ def mean_by_category_request():
 
 @webserver.route("/api/state_mean_by_category", methods=["POST"])
 def state_mean_by_category_request():
+    """ Implement the state_mean_by_category route """
     server_logger.info(
         "[START] /api/state_mean_by_category/{}".format(webserver.job_counter)
     )
@@ -262,6 +274,7 @@ def state_mean_by_category_request():
 
 @webserver.route("/api/graceful_shutdown", methods=["GET"])
 def graceful_shutdown():
+    """ Implement the shutdown route """
     server_logger.info("[START] graceful_shutdown")
     webserver.tasks_runner.stop()
     server_logger.info("[END] graceful_shutdown")
@@ -270,6 +283,7 @@ def graceful_shutdown():
 
 @webserver.route("/api/num_jobs", methods=["GET"])
 def num_jobs():
+    """ Implement the num_jobs route """
     server_logger.info("[START] /api/num_jobs/")
     output_files = os.listdir("results/")
     done_jobs = len(output_files)
@@ -281,6 +295,7 @@ def num_jobs():
 
 @webserver.route("/api/jobs", methods=["GET"])
 def api_jobs():
+    """ Implement the jobs route """
     server_logger.info("[START] /api/jobs/")
     job_statuses = []
     for job_id, is_completed in webserver.tasks_runner.requests_dict.items():
@@ -296,6 +311,7 @@ def api_jobs():
 @webserver.route("/")
 @webserver.route("/index")
 def index():
+    """ Original function from file """
     routes = get_defined_routes()
     msg = f"Hello, World!\n Interact with the webserver using one of the defined routes:\n"
 
@@ -309,6 +325,7 @@ def index():
 
 
 def get_defined_routes():
+    """ Original function from file """
     routes = []
     for rule in webserver.url_map.iter_rules():
         methods = ", ".join(rule.methods)
