@@ -9,7 +9,6 @@ import json
 from queue import Queue
 from app.logger import server_logger
 
-
 class Task:
     """ Task Class - the parent class of every type of request """
     def __init__(self, data_dict, question, job_id, requests_map, mutex):
@@ -21,7 +20,7 @@ class Task:
 
     def acces_requests_dict(self, flag):
         """ To keep track of invalid/running/done tasks """
-        if self.mutex is None and self.acces_requests_dict is False:
+        if self.mutex is None and self.requests_map is None:
             return
         with self.mutex:
             self.requests_map[self.job_id] = flag

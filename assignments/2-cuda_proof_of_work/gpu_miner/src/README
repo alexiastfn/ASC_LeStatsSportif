@@ -1,0 +1,20 @@
+Stefan Alexia 332CB
+Tema2 ASC
+
+## In main:
+
+- imi fac niste variabile auxiliare (gpu_nonce, gpu_block_content, gpu_block_hash, gpu_current_length) pentru care aloc spatiu cu cudaMalloc
+- setez primul byte din gpu_block_hash cu 0 (pentru ca atunci cand voi avea `compare_hashes(gpu_block_hash_copy, difficulty) <= 0` aka se gaseste un nonce, acel byte nu va mai fi 0 => celelalte thread-uri nu mai au de ce sa continue for-ul din findNonce => aceasta setare a primul byte 0 este ca un flag)
+- copiez in gpu_current_length, gpu_nonce, gpu_block_content ce se afla current_length, nonce si in block_content cu cudaMemcpy
+- apelez findNonce, cu blockSize = 256 si formula din laborator pentru numBlocks
+- copiez inapoi in nonce si in block_hash ce aveam in gpu_nonce, gpu_blocj_hash, iar apoi dau free
+
+## In findNonce:
+
+- am preluat din laborator index si stride
+- initial verific daca primul element din gpu_block_hash nu este 0
+  => daca nu este: inseamna ca un al thread a obtinut deja
+  `compare_hashes(gpu_block_hash_copy, difficulty) <= 0`, deci s-a gasit un nonce => nu mai este nevoie sa se execute for-ul/functia
+- respect logica din codul secvential, dar folosind functiile din utils pentru cuda: intToString, d_strcpy, apply_sha256
+- se verifica daca compare_hashes(gpu_block_hash_copy, difficulty) <= 0
+  => daca da: inseamna ca voi pune in gpu_block_hash ce este in gpu_block_hash_copy, si, astfel, primul byte nu va mai fi 0 din gpu_block_hash, deci celalalte thread-uri vor intra pe primul if din for si vor da break

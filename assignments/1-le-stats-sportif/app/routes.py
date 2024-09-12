@@ -6,7 +6,6 @@ import json
 from app.task_runner import *
 from app.logger import server_logger
 
-
 @webserver.route("/api/get_results/<job_id>", methods=["GET"])
 def get_response(job_id):
     """ Implement the get_results route """
