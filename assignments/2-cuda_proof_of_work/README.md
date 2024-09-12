@@ -1,5 +1,7 @@
 # Tema 2 - Implementarea CUDA a algoritmului de consens Proof of Work din cadrul Bitcoin
 
+cerinta 2024 ocw asc: https://ocw.cs.pub.ro/courses/asc/teme/tema2
+
 ## Enunț
 Implementarea unui algoritm de consens distribuit Proof of Work pe blockchain folosind programare pe GPU în CUDA.
 
